@@ -146,7 +146,7 @@ function toHTML(question) {
                     </div>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio4" value="${question.options[3]}">
-                        <label class="form-check-label" for="inlineRadio3">${question.options[3]}</label>
+                        <label class="form-check-label" for="inlineRadio4">${question.options[3]}</label>
                     </div>
                 </form>
             </div>
