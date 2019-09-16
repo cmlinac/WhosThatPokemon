@@ -41,3 +41,7 @@
     background: none;
     border: none;
 }
+
+.result-image {
+    padding: 10px;
+}

@@ -55,7 +55,6 @@ var score = 0;
 var timer;
 
 $("#start-button").on("click", play);
-$("#done-button").on("click", finish.bind("timeout", false));
 $(document).on("click", ".poke-image", imageClick)
 $(document).on("click", ".next-button", nextButtonClick);
 
@@ -67,7 +66,7 @@ function play() {
     shuffle(questions);
     // loop through questions array
     // display the first question
-    display(questions[index]);
+    display();
 };
 
 function countDown() {
@@ -77,7 +76,7 @@ function countDown() {
     $("#time-left").text("You have " + timeLeft + " seconds left!")
     // if it's zero, they lose
     if (timeLeft === 0) {
-        finish(true);
+        wrongAnswer(true);
     }
 }
 
@@ -96,33 +95,38 @@ function shuffle(array) {
 };
 
 function display() {
-    clearInterval(timer);
-    // start & write timer
-    timeLeft = 30;
-    $("#time-left").text("You have 30 seconds left!");
-    timer = setInterval(countDown, 1000);
-    // get the question
-    question = questions[index];
-     // shuffle options array - shuffle()
-    shuffle(question.options);
-    // clear previous question
-    $("#questions").empty();
-    // inject using jquery including img
-    $("#questions").append(toHTML(question));
-    // increase index
-    index++;
-    // display the right button
-    if (index < questions.length) {
+    if (index === questions.length) {
+        finish();
+    } else {
+        clearInterval(timer);
+        // start & write timer
+        timeLeft = 30;
+        $("#details").attr("style", "display:block");
+        $("#feedback").empty();
+        $("#time-left").text("You have 30 seconds left!");
+        timer = setInterval(countDown, 1000);
+        // get the question
+        question = questions[index];
+        // shuffle options array - shuffle()
+        shuffle(question.options);
+        // clear previous question
+        $("#questions").empty();
+        // inject using jquery including img
+        $("#questions").append(toHTML(question));
+        // increase index
+        index++;
+
+        // display the next question button
+
         $("#questions").append(`
         <button class="btn btn-danger next-button">Next</button>
         `);
-    } else {
-        $("#done-button").css("display", "inline-block");
     }
     
 };
 
 function toHTML(question) {
+    // fill out the html for the question
     return `
     <div class="row">
         <div class="col-md-12"> 
@@ -154,38 +158,37 @@ function toHTML(question) {
     </div>`;
 }
 
-function calcScore() {
+function calcScoreAndDisplay() {
     // check if they got it right
     var correct = questions[index - 1].answer;
     var answer = $("#" + correct + " input:radio:checked").val();
-    if (answer === correct) {
+    var answerIsRight = (answer === correct);
+    // hide game details
+    // check if right and display correct result
+    if (answerIsRight) {
         score++;
-    } 
+        rightAnswer();
+    } else {
+        wrongAnswer(false);
+    }
+    
 }
 
 function nextButtonClick() {
-    calcScore();
-    // display next question
-    display(question[index]);
+    calcScoreAndDisplay();
 }
 
-function finish(timeout) {
-    // check their answers
-    calcScore();
+function finish() {
     var container = $(".container")
     // clear questions
     container.empty();
-    // if user ran out of time display time's up message
-    if (timeout) {
-        container.append("<h1>Time's Up!</h1>");
-    }
     // display score and picture that goes along with score
     container.append($(`
     <h1>Your score was ${score} out of 8!</h1>
     <h2>${getPhrase(score)}</h2>
-    <img src="assets/images/${score}.gif" height="400px">
+    <img src="assets/images/${score}.gif" height="400px" class="result-image">
     `));
-        // play again button?   
+        
 };
 
 function getPhrase(score) {
@@ -208,3 +211,35 @@ function imageClick() {
     $(this).attr("src", fullImage);
 }
 
+function rightAnswer() {
+    $("#details").attr("style", "display:none");
+    setTimeout(display, 1200);
+    // setTimeout(showDetails, 1200);
+    var questionsDiv = $("#questions");
+    questionsDiv.empty();
+    $("#feedback").text("You got it right!");
+    var image = $("<img>");
+    image.attr("src", "assets/images/right.gif");
+    questionsDiv.append(image);
+}
+
+function wrongAnswer(timeout) {
+    $("#details").attr("style", "display:none");
+    setTimeout(display, 2000);
+    // setTimeout(showDetails, 2000);
+    var questionsDiv = $("#questions");
+    questionsDiv.empty();
+    if (timeout) {
+        $("#feedback").text("Time's Up!");
+    } else {
+        $("#feedback").text("You got it wrong!");
+    }
+    var right = $("<h5>The right answer was <strong>" + questions[index - 1].answer + ".</strong><h5>");
+    var image = $("<img>");
+    image.attr("src", "assets/images/wrong.gif");
+    questionsDiv.append(right, image);
+}
+
+function showDetails() {
+    $("#details").attr("style", "display:block");
+}
