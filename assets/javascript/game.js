@@ -117,7 +117,6 @@ function display() {
         index++;
 
         // display the next question button
-
         $("#questions").append(`
         <button class="btn btn-danger next-button">Next</button>
         `);
@@ -207,14 +206,16 @@ function getPhrase(score) {
 };
 
 function imageClick() {
+    // show hint when image is clicked
     var fullImage = $(this).attr("hint");
     $(this).attr("src", fullImage);
 }
 
 function rightAnswer() {
+    // hide game specific text
     $("#details").attr("style", "display:none");
+    // show right answer feedback for 1.2 seconds, then call display
     setTimeout(display, 1200);
-    // setTimeout(showDetails, 1200);
     var questionsDiv = $("#questions");
     questionsDiv.empty();
     $("#feedback").text("You got it right!");
@@ -224,9 +225,10 @@ function rightAnswer() {
 }
 
 function wrongAnswer(timeout) {
+    // hide game specific text
     $("#details").attr("style", "display:none");
+    // show wrong answer feedback for two seconds, then call display
     setTimeout(display, 2000);
-    // setTimeout(showDetails, 2000);
     var questionsDiv = $("#questions");
     questionsDiv.empty();
     if (timeout) {
@@ -238,8 +240,4 @@ function wrongAnswer(timeout) {
     var image = $("<img>");
     image.attr("src", "assets/images/wrong.gif");
     questionsDiv.append(right, image);
-}
-
-function showDetails() {
-    $("#details").attr("style", "display:block");
 }
