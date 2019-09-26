@@ -1,4 +1,8 @@
-# Who's That Pokemon
-Who's that Pokémon?! Guess the name of all of the critters before the time expires. Don't recognize the silhouette? Click on the image to see them in full color.
+## Who's that Pokémon?
+Put your pokémon knowledge to the test. Can you answer in time? Take this quiz that provides immediate feedback on your choices. Having trouble recognizing the silhouette? Click on the picture to add some color.
+Check out the live site [here](https://cmlinac.github.io/WhosThatPokemon/). 
 
-This is a continuation of the [Trivia Game](https://github.com/cmlinac/TriviaGame) project, which was one page instead of this multi-page setup.
+### Technologies and Resources
+- JavaScript
+- jQuery
+- Bootstrap
